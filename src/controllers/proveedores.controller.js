@@ -10,6 +10,10 @@ const getallproveedores = async (req, res, next) => {
   }
 };
 
+
+// segundo intento
+
+
 //------------------------------------- MOSTRAR UN SOLO PROVEEDOR ----------------------------------------
 const getproveedores = async (req, res, next) => {
   try {
@@ -63,6 +67,8 @@ const actualizarproveedores = async (req, res, next) => {
     next(error);
  }
 };
+
+//preuba de rama remorta
 
 //---------------------- ELIMINAR USUARIO --------------------------
 const eliminarproveedores = async (req, res) => {
