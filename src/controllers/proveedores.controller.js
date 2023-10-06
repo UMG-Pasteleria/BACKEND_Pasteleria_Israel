@@ -64,6 +64,8 @@ const actualizarproveedores = async (req, res, next) => {
  }
 };
 
+//preuba de rama remorta
+
 //---------------------- ELIMINAR USUARIO --------------------------
 const eliminarproveedores = async (req, res) => {
   const { idprov } = req.params;
