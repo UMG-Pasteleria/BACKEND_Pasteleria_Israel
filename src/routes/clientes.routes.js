@@ -13,6 +13,6 @@ router.post('/cliente', crearclientes)
 
 router.delete('/cliente/:id_cliente', eliminarclientes)
 
-router.put('/cliente/:idu_cliente', actualizarclientes)
+router.put('/cliente/:id_cliente', actualizarclientes)
 
 module.exports = router;

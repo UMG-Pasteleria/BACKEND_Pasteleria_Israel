@@ -50,7 +50,7 @@ const actualizarclientes = async (req, res, next) => {
     const { nombre_cl, nit_cl, telefono_cl, direccion_cl, tipo_cliente } = req.body;
 
     const result = await pool.query(
-      "UPDATE cliente SET nombre_cl = $1, nit_cl = $2, telefono_cl = $3, direccion_cl = $4, tipo:cliente = $5 WHERE id_cliente = $6 RETURNING *",
+      "UPDATE cliente SET nombre_cl = $1, nit_cl = $2, telefono_cl = $3, direccion_cl = $4, tipo_cliente = $5 WHERE id_cliente = $6 RETURNING *",
       [nombre_cl, nit_cl, telefono_cl, direccion_cl, tipo_cliente, id_cliente]
     );
     if (result.rows.length === 0)

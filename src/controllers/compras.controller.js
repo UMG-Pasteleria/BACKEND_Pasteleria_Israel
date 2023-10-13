@@ -54,7 +54,7 @@ const actualizarcompras = async (req, res, next) => {
     const {  responsable, metdpago, emision, entrega } = req.body;
 
     const result = await pool.query(
-      "UPDATE compras SET responsable = $1, metdpago = $2, emision = $3, entrega = $4 WHERE idcompras = $6 RETURNING *",
+      "UPDATE compras SET responsable = $1, metdpago = $2, emision = $3, entrega = $4 WHERE idcompras = $5 RETURNING *",
       [responsable, metdpago, emision, entrega , idcompras]
     );
     if (result.rows.length === 0)
