@@ -7,7 +7,10 @@ const proveedoresRouter = require('./routes/proveedores.routes')
 const comprasRouter = require('./routes/compras.routes')
 const clientesRouter = require('./routes/clientes.routes')
 const tipoclienteRouter = require('./routes/tipocliente.routes')
-
+const productoRouter = require('./routes/productos.routes')
+const pagoRouter = require('./routes/modo_pago.rou')
+const facturaRouter = require('./routes/factura.rou')
+const ventaRouter = require('./routes/ventas.rou')
 
 const app = express();
 
@@ -20,6 +23,10 @@ app.use(proveedoresRouter);
 app.use(comprasRouter);
 app.use(clientesRouter);
 app.use(tipoclienteRouter);
+app.use(productoRouter);
+app.use(pagoRouter);
+app.use(facturaRouter);
+app.use(ventaRouter);
 
 
 app.use((err, req, res, next) =>{

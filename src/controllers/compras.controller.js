@@ -34,11 +34,11 @@ const getcompras = async (req, res, next) => {
 const crearcompras = async (req, res, next) => {
   try {
     //console.log(req.body); 
-    const { responsable, metdpago, emision, entrega } = req.body;
+    const { responsable, nombre_producto, cantidad, metdpago, emision, entrega } = req.body;
     const result = await pool.query(
-      "INSERT INTO compras (  responsable, metdpago, emision, entrega) VALUES ($1, $2, $3, $4 ) RETURNING *",
+      "INSERT INTO compras (  responsable, nombre_producto, cantidad, metdpago, emision, entrega) VALUES ($1, $2, $3, $4, $5, $6 ) RETURNING *",
      
-      [  responsable, metdpago, emision, entrega]
+      [  responsable, nombre_producto, cantidad, metdpago, emision, entrega]
     );
 
     res.json(result.rows[0]);
@@ -51,11 +51,11 @@ const crearcompras = async (req, res, next) => {
 const actualizarcompras = async (req, res, next) => {
   const { idcompras } = req.params;
  try{
-    const {  responsable, metdpago, emision, entrega } = req.body;
+    const {  responsable, nombre_producto, cantidad, metdpago, emision, entrega} = req.body;
 
     const result = await pool.query(
-      "UPDATE compras SET responsable = $1, metdpago = $2, emision = $3, entrega = $4 WHERE idcompras = $5 RETURNING *",
-      [responsable, metdpago, emision, entrega , idcompras]
+      "UPDATE compras SET responsable = $1, nombre_producto = $2, cantidad = $3, metd_pago = $4, emision = $5, entrega = $6 WHERE idcompras = $7 RETURNING *",
+      [responsable, nombre_producto, cantidad, metdpago, emision, entrega, idcompras]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
@@ -75,7 +75,7 @@ const eliminarcompras = async (req, res) => {
   const { idcompras } = req.params;
   try{
     const result = await pool.query("DELETE FROM compras WHERE idcompras = $1", [
-        idcompras      ]);
+        idcompras  ]);
     
       if (result.rowCount === 0)
         return res.status(404).json({
