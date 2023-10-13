@@ -3,18 +3,22 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS PROVEEDORES --------------------------------------
 const getallproveedores = async (req, res, next) => {
   try {
-    const allproveedores = await pool.query("SELECT *FROM proveedores");
+    const allproveedores = await pool.query("SELECT *FROM proveedor");
     res.json(allproveedores.rows);
   } catch (error) {
     next(error);
   }
 };
 
+
+// segundo intento
+
+
 //------------------------------------- MOSTRAR UN SOLO PROVEEDOR ----------------------------------------
 const getproveedores = async (req, res, next) => {
   try {
     const { idprov } = req.params;
-    const result = await pool.query("SELECT *FROM proveedores WHERE idprov = $1", [
+    const result = await pool.query("SELECT *FROM proveedor WHERE idprov = $1", [
       idprov,
     ]);
     if (result.rows.length === 0)
@@ -30,11 +34,11 @@ const getproveedores = async (req, res, next) => {
 const crearproveedores = async (req, res, next) => {
   try {
     //console.log(req.body); 
-    const {  proveedor, nit, telefono, email, direccion } = req.body;
+    const { nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr } = req.body;
     const result = await pool.query(
-      "INSERT INTO proveedores (  proveedor, nit, telefono, email, direccion) VALUES ($1, $2, $3, $4, $5 ) RETURNING *",
+      "INSERT INTO proveedor ( nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr) VALUES ($1, $2, $3, $4, $5 ) RETURNING *",
      
-      [  proveedor, nit, telefono, email, direccion]
+      [ nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr]
     );
 
     res.json(result.rows[0]);
@@ -47,11 +51,11 @@ const crearproveedores = async (req, res, next) => {
 const actualizarproveedores = async (req, res, next) => {
   const { idprov } = req.params;
  try{
-    const { proveedor, nit, telefono, email, direccion } = req.body;
+    const { nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr } = req.body;
 
     const result = await pool.query(
-      "UPDATE proveedores SET proveedor = $1, nit = $2, telefono = $3, email = $4, direccion = $5 WHERE idprov = $6 RETURNING *",
-      [proveedor, nit, telefono, email, direccion, idprov]
+      "UPDATE proveedor SET nombre_pr = $1, telefono_pr = $2, correo_pr = $3, direccion_pr = $4, nit_pr = $5 WHERE idprov = $6 RETURNING *",
+      [nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr, idprov]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
@@ -70,7 +74,7 @@ const actualizarproveedores = async (req, res, next) => {
 const eliminarproveedores = async (req, res) => {
   const { idprov } = req.params;
   try{
-    const result = await pool.query("DELETE FROM proveedores WHERE idprov = $1", [
+    const result = await pool.query("DELETE FROM proveedor WHERE idprov = $1", [
         idprov      ]);
     
       if (result.rowCount === 0)

@@ -7,12 +7,12 @@ const router = Router();
 
 router.get('/usuario', getAllusuarios)
 
-router.get('/usuario/:iduser', getUsuarios)
+router.get('/usuario/:idusuario', getUsuarios)
 
 router.post('/usuario', crearUsuarios)
 
-router.delete('/usuario/:iduser', eliminarUsuarios)
+router.delete('/usuario/:idusuario', eliminarUsuarios)
 
-router.put('/usuario/:iduser', actualizarUsuarios)
+router.put('/usuario/:idusuario', actualizarUsuarios)
 
 module.exports = router;
