@@ -5,14 +5,14 @@ const {getallproveedores, getproveedores, crearproveedores, eliminarproveedores,
 
 const router = Router();
 
-router.get('/proveedores', getallproveedores)
+router.get('/proveedor', getallproveedores)
 
-router.get('/proveedores/:idprov', getproveedores)
+router.get('/proveedor/:idprov', getproveedores)
 
-router.post('/proveedores', crearproveedores)
+router.post('/proveedor', crearproveedores)
 
-router.delete('/proveedores/:idprov', eliminarproveedores)
+router.delete('/proveedor/:idprov', eliminarproveedores)
 
-router.put('/proveedores/:idprov', actualizarproveedores)
+router.put('/proveedor/:idprov', actualizarproveedores)
 
 module.exports = router;
