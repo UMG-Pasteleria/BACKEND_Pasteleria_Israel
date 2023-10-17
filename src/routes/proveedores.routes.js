@@ -1,18 +1,22 @@
-const {Router} = require('express');
-const {getallproveedores, getproveedores, crearproveedores, eliminarproveedores, actualizarproveedores} = require('../controllers/proveedores.controller')
-
-
+const { Router } = require("express");
+const {
+  getallproveedores,
+  getproveedores,
+  crearproveedores,
+  eliminarproveedores,
+  actualizarproveedores,
+} = require("../controllers/proveedores.controller");
 
 const router = Router();
 
-router.get('/proveedor', getallproveedores)
+router.get("/proveedores", getallproveedores);
 
-router.get('/proveedor/:idprov', getproveedores)
+router.get("/proveedores/:idprov", getproveedores);
 
-router.post('/proveedor', crearproveedores)
+router.post("/proveedores", crearproveedores);
 
-router.delete('/proveedor/:idprov', eliminarproveedores)
+router.delete("/proveedores/:idprov", eliminarproveedores);
 
-router.put('/proveedor/:idprov', actualizarproveedores)
+router.put("/proveedores/:idprov", actualizarproveedores);
 
 module.exports = router;
