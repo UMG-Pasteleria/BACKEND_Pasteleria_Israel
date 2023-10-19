@@ -11,7 +11,11 @@ const getallproveedores = async (req, res, next) => {
 };
 
 
+<<<<<<< Updated upstream
 // segundo intento
+=======
+// este es una prueba remota de Hector 
+>>>>>>> Stashed changes
 
 
 //------------------------------------- MOSTRAR UN SOLO PROVEEDOR ----------------------------------------
