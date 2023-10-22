@@ -12,6 +12,7 @@ const pagoRouter = require("./routes/modo_pago.routes");
 const facturaRouter = require("./routes/factura.routes");
 const ventaRouter = require("./routes/ventas.routes");
 const pedidosRouter = require("./routes/pedidoCliente.routes");
+const webRouter = require("./routes/web.routes");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(pagoRouter);
 app.use(facturaRouter);
 app.use(ventaRouter);
 app.use(pedidosRouter);
+app.use(webRouter);
 
 app.use((err, req, res, next) => {
   return res.json({
