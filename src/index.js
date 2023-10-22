@@ -12,6 +12,9 @@ const pagoRouter = require("./routes/modo_pago.routes");
 const facturaRouter = require("./routes/factura.routes");
 const ventaRouter = require("./routes/ventas.routes");
 const pedidosRouter = require("./routes/pedidoCliente.routes");
+const categoriaRouter = require("./routes/categoria.rou");
+const paginawebRouter = require("./routes/pagweb.rou");
+const mate_primaRouter = require("./routes/mate_prima.rou");
 
 const app = express();
 
@@ -29,6 +32,9 @@ app.use(pagoRouter);
 app.use(facturaRouter);
 app.use(ventaRouter);
 app.use(pedidosRouter);
+app.use(categoriaRouter);
+app.use(paginawebRouter);
+app.use(mate_primaRouter);
 
 app.use((err, req, res, next) => {
   return res.json({

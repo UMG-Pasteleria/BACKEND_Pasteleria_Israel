@@ -43,6 +43,7 @@ const crearclientes = async (req, res, next) => {
   }
 };
 
+
 //--------------------- ACTUALIZAR DATOS DE CLIENTE -----------------------------------------
 const actualizarclientes = async (req, res, next) => {
   const { id_cliente } = req.params;
@@ -63,6 +64,9 @@ const actualizarclientes = async (req, res, next) => {
     next(error);
  }
 };
+
+
+
 
 //---------------------- ELIMINAR CLIENTE --------------------------
 const eliminarclientes = async (req, res) => {
