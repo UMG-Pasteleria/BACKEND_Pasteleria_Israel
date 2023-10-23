@@ -1,8 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const app = express();
 
-app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 const usuariosRouter = require("./routes/usuarios.routes");
 const proveedoresRouter = require("./routes/proveedores.routes");
@@ -18,6 +23,7 @@ const webRouter = require("./routes/web.routes");
 const categoriaRouter = require("./routes/categoria.routes");
 const paginawebRouter = require("./routes/pagweb.routes");
 const mate_primaRouter = require("./routes/mate_prima.routes");
+const pastelRouter = require("./routes/pasteles.routes");
 
 app.use(pagoRouter);
 app.use(facturaRouter);
@@ -33,8 +39,9 @@ app.use(clientesRouter);
 app.use(comprasRouter);
 app.use(proveedoresRouter);
 app.use(usuariosRouter);
+app.use(pastelRouter);
 
-app.use(cors());
+// app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
