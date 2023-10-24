@@ -1,91 +1,113 @@
-const { Pool } = require('pg');
+const pool = require("../db");
 
-const pool = new Pool({
-    connectionString: 'pasteleria_israel', // Reemplaza con la conexión a tu base de datos
-});
-
-// Controlador para crear un nuevo pedido
-const crearPedido = async (req, res) => {
-    const { clienteId, productos, total } = req.body;
-    try {
-        const result = await pool.query(
-            'INSERT INTO pedidos (cliente_id, productos, total) VALUES ($1, $2, $3) RETURNING *',
-            [clienteId, productos, total]
-        );
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al crear un nuevo pedido');
-    }
+//------------------------------------ MOSTRAR TODOS LOS PEDIDOS --------------------------------------
+const getAllpedido = async (req, res, next) => {
+  try {
+    const allpedido = await pool.query("SELECT * FROM pedido");
+    res.json(allpedido.rows);
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Controlador para obtener todos los pedidos
-const obtenerPedidos = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM pedidos');
-        res.json(result.rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al obtener los pedidos');
-    }
+//------------------------------------- MOSTRAR UN SOLO PEDIDO ----------------------------------------
+const getpedido = async (req, res, next) => {
+  try {
+    const { idpedido } = req.params;
+    const result = await pool.query("SELECT *FROM pedido WHERE idpedido = $1", [
+      idpedido,
+    ]);
+    if (result.rows.length === 0)
+      return res.status(404).json({
+        message: "pedido no encontrado",
+      });
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+//---------------CREAR UN NUEVO PEDIDO ------------------
+const crearpedido = async (req, res, next) => {
+  try {
+    //console.log(req.body);
+    const {
+      fecha_pedido,
+      producto_pro,
+      cantidad_pro,
+      subtotal,
+      total,
+      id_client,
+    } = req.body;
+    const result = await pool.query(
+      "INSERT INTO pedido ( fecha_pedido, producto_pro, cantidad_pro, subtotal, total, id_client) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
+      [fecha_pedido, producto_pro, cantidad_pro, subtotal, total, id_client]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Controlador para obtener un pedido por su ID
-const obtenerPedidoPorId = async (req, res) => {
-    const pedidoId = req.params.id;
-    try {
-        const result = await pool.query('SELECT * FROM pedidos WHERE id = $1', [pedidoId]);
-        if (result.rows.length === 0) {
-            res.status(404).send('Pedido no encontrado');
-        } else {
-            res.json(result.rows[0]);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al obtener el pedido');
-    }
+//--------------------- ACTUALIZAR DATOS DE PEDIDO -----------------------------------------
+const actualizarpedido = async (req, res, next) => {
+  const { idpedido } = req.params;
+  try {
+    const {
+      fecha_pedido,
+      producto_pro,
+      cantidad_pro,
+      subtotal,
+      total,
+      id_client,
+    } = req.body;
+
+    const result = await pool.query(
+      "UPDATE pedido SET fecha_pedido = $1, producto_pro = $2, cantidad_pro = $3, subtotal = $4, total=$5, id_client = $6 WHERE idpedido = $7 RETURNING *",
+      [
+        fecha_pedido,
+        producto_pro,
+        cantidad_pro,
+        subtotal,
+        total,
+        id_client,
+        idpedido,
+      ]
+    );
+    if (result.rows.length === 0)
+      return res.status(404).json({
+        message: "pedido no encontrado",
+      });
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Controlador para actualizar un pedido por su ID
-const actualizarPedido = async (req, res) => {
-    const pedidoId = req.params.id;
-    const { clienteId, productos, total } = req.body;
-    try {
-        const result = await pool.query(
-            'UPDATE pedidos SET cliente_id = $1, productos = $2, total = $3 WHERE id = $4 RETURNING *',
-            [clienteId, productos, total, pedidoId]
-        );
-        if (result.rows.length === 0) {
-            res.status(404).send('Pedido no encontrado');
-        } else {
-            res.json(result.rows[0]);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al actualizar el pedido');
-    }
-};
+//---------------------- ELIMINAR PEDIDO  --------------------------
+const eliminarpedido = async (req, res) => {
+  const { idpedido } = req.params;
+  try {
+    const result = await pool.query("DELETE FROM pedido WHERE idpedido = $1", [
+      idpedido,
+    ]);
 
-// Controlador para eliminar un pedido por su ID
-const eliminarPedido = async (req, res) => {
-    const pedidoId = req.params.id;
-    try {
-        const result = await pool.query('DELETE FROM pedidos WHERE id = $1 RETURNING *', [pedidoId]);
-        if (result.rows.length === 0) {
-            res.status(404).send('Pedido no encontrado');
-        } else {
-            res.json({ message: 'Pedido eliminado exitosamente' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al eliminar el pedido');
-    }
+    if (result.rowCount === 0)
+      return res.status(404).json({
+        message: "Pedido no encontrado",
+      });
+
+    return res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
-    crearPedido,
-    obtenerPedidos,
-    obtenerPedidoPorId,
-    actualizarPedido,
-    eliminarPedido,
+  getAllpedido,
+  getpedido,
+  crearpedido,
+  actualizarpedido,
+  eliminarpedido,
 };

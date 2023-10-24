@@ -3,11 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  })
-);
+app.use(cors());
 
 const usuariosRouter = require("./routes/usuarios.routes");
 const proveedoresRouter = require("./routes/proveedores.routes");
