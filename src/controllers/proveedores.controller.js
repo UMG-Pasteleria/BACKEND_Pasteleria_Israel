@@ -32,7 +32,7 @@ const getproveedores = async (req, res, next) => {
 //---------------CREAR UN NUEVO PROVEEEDOR ------------------
 const crearproveedores = async (req, res, next) => {
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const { telefono_pr, correo_pr, direccion_pr, nit_pr, nombre_pr } =
       req.body;
     const result = await pool.query(
