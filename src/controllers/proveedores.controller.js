@@ -46,7 +46,9 @@ const crearproveedores = async (req, res, next) => {
     next(error);
   }
 };
-
+`INSERT INTO pedido(fecha_pedido, cantidad, total, cliente_idped, pastel_idped, estado_idped, modopago_idped) 
+VLAUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+  [Fecha, cantidad, total, id_cliente, id_pastel, id_estado, id_modopago];
 //--------------------- ACTUALIZAR DATOS DE PROVEEDORES -----------------------------------------
 const actualizarproveedores = async (req, res, next) => {
   const { idprov } = req.params;

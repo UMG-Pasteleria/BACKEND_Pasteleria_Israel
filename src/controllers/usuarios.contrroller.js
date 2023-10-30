@@ -38,21 +38,19 @@ const crearUsuarios = async (req, res, next) => {
       apellido_u,
       edad,
       telefono,
-      email,
       correo,
       direccion,
       password,
       rol_idrol,
     } = req.body;
     const result = await pool.query(
-      "INSERT INTO usuario ( nombre_u, apellido_u, edad, telefono, email, correo, direccion, password, rol_idrol) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *",
+      "INSERT INTO usuario ( nombre_u, apellido_u, edad, telefono,  correo, direccion, password, rol_idrol) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
       [
         nombre_u,
         apellido_u,
         edad,
         telefono,
-        email,
         correo,
         direccion,
         password,
@@ -75,7 +73,6 @@ const actualizarUsuarios = async (req, res, next) => {
       apellido_u,
       edad,
       telefono,
-      email,
       correo,
       direccion,
       password,
@@ -89,7 +86,6 @@ const actualizarUsuarios = async (req, res, next) => {
         apellido_u,
         edad,
         telefono,
-        email,
         correo,
         direccion,
         password,

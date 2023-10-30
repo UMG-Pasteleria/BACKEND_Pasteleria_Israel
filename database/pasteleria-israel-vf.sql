@@ -58,14 +58,9 @@ CREATE TABLE IF NOT EXISTS producto (
     fecha DATE,
     descripcion VARCHAR(45),
     total FLOAT
-) create trigger TR_VENTAS on ventas for
-insert AS
-set nocount on 
-update producto
-set productos.existencia = productos.existencia - inserted.cantidad
-from inserted
-    inner join producto on productos.cod_prod = inserted.cod_prod
-go CREATE TABLE IF NOT EXISTS compras (
+) 
+
+CREATE TABLE IF NOT EXISTS compras (
         idcompras serial PRIMARY KEY,
         responsable VARCHAR(45),
         nombre_producto varchar(45),
