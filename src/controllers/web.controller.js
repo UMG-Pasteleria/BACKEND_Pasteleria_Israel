@@ -64,7 +64,7 @@ const actualizarWeb = async (req, res, next) => {
 };
 
 //---------------------- ELIMINAR USUARIO --------------------------
-const eliminarWeb = async (req, res) => {
+const eliminarWeb = async (req, res, next) => {
   const { id_web } = req.params;
   try {
     const result = await pool.query("DELETE FROM web WHERE id_web = $1", [

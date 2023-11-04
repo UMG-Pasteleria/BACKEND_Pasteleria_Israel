@@ -33,12 +33,12 @@ const getproveedores = async (req, res, next) => {
 const crearproveedores = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { telefono_pr, correo_pr, direccion_pr, nit_pr, nombre_pr } =
+    const { nombre_proveedor, nit, telefono_prov, email, direccion_prov } =
       req.body;
     const result = await pool.query(
-      "INSERT INTO proveedor ( telefono_pr, correo_pr, direccion_pr, nit_pr, nombre_pr) VALUES ($1, $2, $3, $4, $5 ) RETURNING *",
+      "INSERT INTO proveedor ( nombre_proveedor, nit, telefono_prov, email, direccion_prov) VALUES ($1, $2, $3, $4, $5 ) RETURNING *",
 
-      [telefono_pr, correo_pr, direccion_pr, nit_pr, nombre_pr]
+      [nombre_proveedor, nit, telefono_prov, email, direccion_prov]
     );
 
     res.json(result.rows[0]);
@@ -46,19 +46,19 @@ const crearproveedores = async (req, res, next) => {
     next(error);
   }
 };
-`INSERT INTO pedido(fecha_pedido, cantidad, total, cliente_idped, pastel_idped, estado_idped, modopago_idped) 
-VLAUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-  [Fecha, cantidad, total, id_cliente, id_pastel, id_estado, id_modopago];
+// `INSERT INTO pedido(fecha_pedido, cantidad, total, cliente_idped, pastel_idped, estado_idped, modopago_idped)
+// VLAUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+//   [Fecha, cantidad, total, id_cliente, id_pastel, id_estado, id_modopago];
 //--------------------- ACTUALIZAR DATOS DE PROVEEDORES -----------------------------------------
 const actualizarproveedores = async (req, res, next) => {
   const { idprov } = req.params;
   try {
-    const { nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr } =
+    const { nombre_proveedor, nit, telefono_prov, email, direccion_prov } =
       req.body;
 
     const result = await pool.query(
-      "UPDATE proveedor SET nombre_pr = $1, telefono_pr = $2, correo_pr = $3, direccion_pr = $4, nit_pr = $5 WHERE idprov = $6 RETURNING *",
-      [nombre_pr, telefono_pr, correo_pr, direccion_pr, nit_pr, idprov]
+      "UPDATE proveedor SET nombre_proveedor = $1, nit = $2, telefono_prov = $3, email = $4, direccion_prov = $5 WHERE idprov = $6 RETURNING *",
+      [nombre_proveedor, nit, telefono_prov, email, direccion_prov, idprov]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
@@ -72,8 +72,8 @@ const actualizarproveedores = async (req, res, next) => {
 
 //preuba de rama remorta
 
-//---------------------- ELIMINAR USUARIO --------------------------
-const eliminarproveedores = async (req, res) => {
+//---------------------- ELIMINAR PROVEEDOR --------------------------
+const eliminarproveedores = async (req, res, next) => {
   const { idprov } = req.params;
   try {
     const result = await pool.query("DELETE FROM proveedor WHERE idprov = $1", [

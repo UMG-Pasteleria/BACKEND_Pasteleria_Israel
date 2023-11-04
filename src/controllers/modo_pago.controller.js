@@ -13,10 +13,11 @@ const getAllmodo_pago = async (req, res, next) => {
 //------------------------------------- MOSTRAR UN SOLO USUARIO ----------------------------------------
 const getmodo_pago = async (req, res, next) => {
   try {
-    const { id_modopago } = req.params;
-    const result = await pool.query("SELECT *FROM modo_pago WHERE id_modopago = $1", [
-        id_modopago,
-    ]);
+    const { idmodp } = req.params;
+    const result = await pool.query(
+      "SELECT *FROM modo_pago WHERE idmodp = $1",
+      [idmodp]
+    );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: "tipo de pago no encontrado",
@@ -30,11 +31,11 @@ const getmodo_pago = async (req, res, next) => {
 const crearmodo_pago = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { nombre_mopago} = req.body;
+    const { modo } = req.body;
     const result = await pool.query(
-      "INSERT INTO modo_pago ( nombre_mopago) VALUES ($1 ) RETURNING *",
+      "INSERT INTO modo_pago ( modo) VALUES ($1 ) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [ nombre_mopago]
+      [modo]
     );
 
     res.json(result.rows[0]);
@@ -45,40 +46,39 @@ const crearmodo_pago = async (req, res, next) => {
 
 //--------------------- ACTUALIZAR DATOS DE MODO DE PAGO -----------------------------------------
 const actualizarmodo_pago = async (req, res, next) => {
-  const { id_modopago} = req.params;
- try{
-    const { nombre_mopago } = req.body;
+  const { idmodp } = req.params;
+  try {
+    const { modo } = req.body;
 
     const result = await pool.query(
       "UPDATE modo_pago SET nombre_mopago = $1 WHERE id_modopago = $2 RETURNING *",
-      [nombre_mopago, id_modopago]
+      [modo, idmodp]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: "tipo de pago no encontrado",
       });
     res.json(result.rows[0]);
- }
- catch(error){
+  } catch (error) {
     next(error);
- }
+  }
 };
 
 //---------------------- ELIMINAR USUARIO --------------------------
-const eliminarmodo_pago = async (req, res) => {
-  const { id_modopago } = req.params;
-  try{
-    const result = await pool.query("DELETE FROM modo_pago WHERE id_modopago = $1", [
-        id_modopago,
-      ]);
-    
-      if (result.rowCount === 0)
-        return res.status(404).json({
-          message: "tipo de pago no encontrado",
-        });
-    
-      return res.sendStatus(204);
-  }catch(error){
+const eliminarmodo_pago = async (req, res, next) => {
+  const { idmodp } = req.params;
+  try {
+    const result = await pool.query("DELETE FROM modo_pago WHERE idmodp = $1", [
+      idmodp,
+    ]);
+
+    if (result.rowCount === 0)
+      return res.status(404).json({
+        message: "tipo de pago no encontrado",
+      });
+
+    return res.sendStatus(204);
+  } catch (error) {
     next(error);
   }
 };

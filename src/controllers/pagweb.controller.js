@@ -3,7 +3,7 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS USUARIOS --------------------------------------
 const getAllpaweb = async (req, res, next) => {
   try {
-    const allpaginaweb = await pool.query("SELECT *FROM paginaweb");
+    const allpaginaweb = await pool.query("SELECT *FROM estado_pedido");
     res.json(allpaginaweb.rows);
   } catch (error) {
     next(error);
@@ -13,10 +13,11 @@ const getAllpaweb = async (req, res, next) => {
 //------------------------------------- MOSTRAR UN SOLO USUARIO ----------------------------------------
 const getpaweb = async (req, res, next) => {
   try {
-    const { id_pagiweb } = req.params;
-    const result = await pool.query("SELECT *FROM paginaweb WHERE id_pagiweb = $1", [
-        id_pagiweb,
-    ]);
+    const { idestadop } = req.params;
+    const result = await pool.query(
+      "SELECT *FROM estado_pedido WHERE idestadop = $1",
+      [idestadop]
+    );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: " web no encontrado",
@@ -30,11 +31,11 @@ const getpaweb = async (req, res, next) => {
 const crearpaweb = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { nom_web, descripcion, usuario} = req.body;
+    const { estado } = req.body;
     const result = await pool.query(
-      "INSERT INTO paginaweb ( nom_web, descripcion, usuario) VALUES ($1, $2, $3 ) RETURNING *",
+      "INSERT INTO estado_pedido (estado) VALUES ($1) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [ nom_web, descripcion, usuario]
+      [estado]
     );
 
     res.json(result.rows[0]);
@@ -45,40 +46,40 @@ const crearpaweb = async (req, res, next) => {
 
 //--------------------- ACTUALIZAR DATOS DE USUARIO -----------------------------------------
 const actualizarpaweb = async (req, res, next) => {
-  const { id_pagiweb } = req.params;
- try{
-    const { nom_web, descripcion, usuario } = req.body;
+  const { idestadop } = req.params;
+  try {
+    const { estado } = req.body;
 
     const result = await pool.query(
-      "UPDATE paginaweb SET nom_web = $1, descripcion = $2, usuario = $3 WHERE id_pagiweb = $4 RETURNING *",
-      [nom_web, descripcion, usuario, id_pagiweb]
+      "UPDATE estado_pedido SET estado = $1 WHERE idestadop = $4 RETURNING *",
+      [estado, idestadop]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: "web no encontrado",
       });
     res.json(result.rows[0]);
- }
- catch(error){
+  } catch (error) {
     next(error);
- }
+  }
 };
 
 //---------------------- ELIMINAR USUARIO --------------------------
-const eliminarpaweb = async (req, res) => {
-  const { idusuario } = req.params;
-  try{
-    const result = await pool.query("DELETE FROM paginaweb WHERE id_pagiweb = $1", [
-        idusuario,
-      ]);
-    
-      if (result.rowCount === 0)
-        return res.status(404).json({
-          message: "web no encontrado",
-        });
-    
-      return res.sendStatus(204);
-  }catch(error){
+const eliminarpaweb = async (req, res, next) => {
+  const { idestadop } = req.params;
+  try {
+    const result = await pool.query(
+      "DELETE FROM estado_pedido WHERE idestadop = $1",
+      [idestadop]
+    );
+
+    if (result.rowCount === 0)
+      return res.status(404).json({
+        message: "web no encontrado",
+      });
+
+    return res.sendStatus(204);
+  } catch (error) {
     next(error);
   }
 };

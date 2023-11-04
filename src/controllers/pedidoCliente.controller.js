@@ -3,7 +3,19 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS PEDIDOS --------------------------------------
 const getAllpedido = async (req, res, next) => {
   try {
-    const allpedido = await pool.query("SELECT * FROM pedido");
+    const allpedido = await pool.query(
+      `
+
+select pedido.idpedido, pedido.fecha_pedido, cliente.nombre_cl, pastel.pastel,  tamanio_pastel.tamanio, decoracion_pastel.decoracion, pedido.dedicatoria, pedido.cantidad, pedido.total, cliente.direccion_cl, cliente.telefono_cl, pedido.anticipo, pedido. fecha_entrega, estado_pedido.estado 
+from pedido
+join cliente on pedido.cliente_idped = cliente.idcliente
+join pastel on pedido.pastel_idped = pastel.idpastel
+join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
+join decoracion_pastel on pastel.dec_idpast = decoracion_pastel.idecpast
+join estado_pedido on pedido.estado_idped = estado_pedido.idestadop
+ORDER BY idpedido DESC 
+`
+    );
     res.json(allpedido.rows);
   } catch (error) {
     next(error);
@@ -29,19 +41,33 @@ const getpedido = async (req, res, next) => {
 //---------------CREAR UN NUEVO PEDIDO ------------------
 const crearpedido = async (req, res, next) => {
   try {
-    //console.log(req.body);
+    const Fecha = new Date();
     const {
-      fecha_pedido,
-      producto_pro,
-      cantidad_pro,
-      subtotal,
+      cantidad,
       total,
-      id_client,
+      dedicatoria,
+      fecha_entrega,
+      anticipo,
+      id_cliente,
+      id_pastel,
+      id_estado,
+      id_modopago,
     } = req.body;
     const result = await pool.query(
-      "INSERT INTO pedido ( fecha_pedido, producto_pro, cantidad_pro, subtotal, total, id_client) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [fecha_pedido, producto_pro, cantidad_pro, subtotal, total, id_client]
+      `INSERT INTO pedido(fecha_pedido, cantidad, total, dedicatoria, fecha_entrega, anticipo, cliente_idped, pastel_idped, estado_idped, modopago_idped) 
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [
+        Fecha,
+        cantidad,
+        total,
+        dedicatoria,
+        fecha_entrega,
+        anticipo,
+        id_cliente,
+        id_pastel,
+        id_estado,
+        id_modopago,
+      ]
     );
 
     res.json(result.rows[0]);
@@ -86,7 +112,7 @@ const actualizarpedido = async (req, res, next) => {
 };
 
 //---------------------- ELIMINAR PEDIDO  --------------------------
-const eliminarpedido = async (req, res) => {
+const eliminarpedido = async (req, res, next) => {
   const { idpedido } = req.params;
   try {
     const result = await pool.query("DELETE FROM pedido WHERE idpedido = $1", [

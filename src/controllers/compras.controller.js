@@ -3,23 +3,27 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS COMPRAS --------------------------------------
 const getallcompras = async (req, res, next) => {
   try {
-    const allcompras = await pool.query("SELECT *FROM compras");
+    const allcompras = await pool.query(
+      `SELECT compra.idcompra, compra.fecha_compra, usuario.nombre_u, proveedor.nombre_proveedor, compra.descripcion, detalle_compra.total  
+FROM compra
+join proveedor on compra.prov_idcomp = proveedor.idprov
+join usuario on compra.user_idcomp = usuario.iduser
+join detalle_compra on compra.detalle_idcomp = detalle_compra.idetallec`
+    );
     res.json(allcompras.rows);
   } catch (error) {
     next(error);
   }
 };
 
-
 // segundo intento
-
 
 //------------------------------------- MOSTRAR UN SOLO COMPRAS ----------------------------------------
 const getcompras = async (req, res, next) => {
   try {
-    const { idcompras } = req.params;
-    const result = await pool.query("SELECT *FROM compras WHERE idcompras = $1", [
-      idcompras,
+    const { idcompra } = req.params;
+    const result = await pool.query("SELECT *FROM compra WHERE idcompra = $1", [
+      idcompra,
     ]);
     if (result.rows.length === 0)
       return res.status(404).json({
@@ -33,12 +37,12 @@ const getcompras = async (req, res, next) => {
 //---------------CREAR UN NUEVO COMPRA ------------------
 const crearcompras = async (req, res, next) => {
   try {
-    //console.log(req.body); 
-    const { responsable, nombre_producto, cantidad, metdpago, emision, entrega } = req.body;
+    //console.log(req.body);
+    const { prov_idcomp, user_idcomp, fecha_compra } = req.body;
     const result = await pool.query(
-      "INSERT INTO compras (  responsable, nombre_producto, cantidad, metdpago, emision, entrega) VALUES ($1, $2, $3, $4, $5, $6 ) RETURNING *",
-     
-      [  responsable, nombre_producto, cantidad, metdpago, emision, entrega]
+      "INSERT INTO compra ( prov_idcomp, user_idcomp, fecha_compra ) VALUES ($1, $2, $3 ) RETURNING *",
+
+      [prov_idcomp, user_idcomp, fecha_compra]
     );
 
     res.json(result.rows[0]);
@@ -49,41 +53,41 @@ const crearcompras = async (req, res, next) => {
 
 //--------------------- ACTUALIZAR DATOS DE COMPRAS -----------------------------------------
 const actualizarcompras = async (req, res, next) => {
-  const { idcompras } = req.params;
- try{
-    const {  responsable, nombre_producto, cantidad, metdpago, emision, entrega} = req.body;
+  const { idcompra } = req.params;
+  try {
+    const { prov_idcomp, user_idcomp, fecha_compra } = req.body;
 
     const result = await pool.query(
-      "UPDATE compras SET responsable = $1, nombre_producto = $2, cantidad = $3, metd_pago = $4, emision = $5, entrega = $6 WHERE idcompras = $7 RETURNING *",
-      [responsable, nombre_producto, cantidad, metdpago, emision, entrega, idcompras]
+      "UPDATE compra SET prov_idcomp = $1, user_idcomp = $2, fecha_compra = $3 WHERE idcompra = $4 RETURNING *",
+      [prov_idcomp, user_idcomp, fecha_compra, idcompra]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: "compra no encontrado",
       });
     res.json(result.rows[0]);
- }
- catch(error){
+  } catch (error) {
     next(error);
- }
+  }
 };
 
-//preuba de rama remortaresponsable, metdpago, emision, entrega 
+//preuba de rama remortaresponsable, metdpago, emision, entrega
 
 //---------------------- ELIMINAR DATO COMPRA --------------------------
-const eliminarcompras = async (req, res) => {
-  const { idcompras } = req.params;
-  try{
-    const result = await pool.query("DELETE FROM compras WHERE idcompras = $1", [
-        idcompras  ]);
-    
-      if (result.rowCount === 0)
-        return res.status(404).json({
-          message: "Compra no encontrado",
-        });
-    
-      return res.sendStatus(204);
-  }catch(error){
+const eliminarcompras = async (req, res, next) => {
+  const { idcompra } = req.params;
+  try {
+    const result = await pool.query("DELETE FROM compras WHERE idcompra = $1", [
+      idcompra,
+    ]);
+
+    if (result.rowCount === 0)
+      return res.status(404).json({
+        message: "Compra no encontrado",
+      });
+
+    return res.sendStatus(204);
+  } catch (error) {
     next(error);
   }
 };
