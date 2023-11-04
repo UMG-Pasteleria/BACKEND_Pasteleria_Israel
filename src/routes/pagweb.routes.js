@@ -1,18 +1,22 @@
-const {Router} = require('express');
-const {getAllpaweb, getpaweb, crearpaweb, eliminarpaweb, actualizarpaweb} = require('../controllers/pagweb.controller')
-
-
+const { Router } = require("express");
+const {
+  getAllpaweb,
+  getpaweb,
+  crearpaweb,
+  eliminarpaweb,
+  actualizarpaweb,
+} = require("../controllers/pagweb.controller");
 
 const router = Router();
 
-router.get('/paginaweb', getAllpaweb)
+router.get("/estado", getAllpaweb);
 
-router.get('/paginaweb/:id_pagiweb', getpaweb)
+router.get("/estado/:idestadop", getpaweb);
 
-router.post('/paginaweb', crearpaweb)
+router.post("/estado", crearpaweb);
 
-router.delete('/paginaweb/:id_pagiweb', eliminarpaweb)
+router.delete("/estado/:idestadop", eliminarpaweb);
 
-router.put('/paginaweb/:id_pagiweb', actualizarpaweb)
+router.put("/estado/:idestadop", actualizarpaweb);
 
 module.exports = router;
