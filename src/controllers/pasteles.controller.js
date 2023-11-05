@@ -3,14 +3,21 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS USUARIOS --------------------------------------
 const getAllpsatel = async (req, res, next) => {
   try {
-    const allpsatel = await pool.query("SELECT *FROM pastel");
+    const allpsatel =
+      await pool.query(`SELECT pastel.idpastel, pastel.pastel, pastel.precio, tamanio_pastel.tamanio, decoracion_pastel.decoracion, categoria_pastel.categoria
+FROM pastel
+join decoracion_pastel on pastel.dec_idpast = decoracion_pastel.idecpast
+join categoria_pastel on pastel.cat_idpast = categoria_pastel.idcatp
+join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
+ORDER BY idpastel DESC 
+`);
     res.json(allpsatel.rows);
   } catch (error) {
     next(error);
   }
 };
 
-//------------------------------------- MOSTRAR UN SOLO USUARIO ----------------------------------------
+//------------------------------------- MOSTRAR UN SOLO PASTEL ----------------------------------------
 const getpsatel = async (req, res, next) => {
   try {
     const { idpastel } = req.params;
@@ -26,29 +33,15 @@ const getpsatel = async (req, res, next) => {
     next(error);
   }
 };
-//---------------CREAR UN NUEVO USUARIO ------------------
+//---------------CREAR UN NUEVO PASTEL ------------------
 const crearpsatel = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const {
-      precio_pastel,
-      nombre_past,
-      tamanio,
-      descripcion_pastel,
-      decoracion,
-      sabor,
-    } = req.body;
+    const { pastel, precio, tamanio_idpast, dec_idpast, cat_idpast } = req.body;
     const result = await pool.query(
-      "INSERT INTO pastel (precio_pastel, nombre_past, tamanio, descripcion_pastel, decoracion, sabor) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      "INSERT INTO pastel (pastel, precio, tamanio_idpast, dec_idpast, cat_idpast) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [
-        precio_pastel,
-        nombre_past,
-        tamanio,
-        descripcion_pastel,
-        decoracion,
-        sabor,
-      ]
+      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast]
     );
 
     res.json(result.rows[0]);
@@ -61,26 +54,11 @@ const crearpsatel = async (req, res, next) => {
 const actualizarpsatel = async (req, res, next) => {
   const { idpastel } = req.params;
   try {
-    const {
-      precio_pastel,
-      nombre_past,
-      tamanio,
-      descripcion_pastel,
-      decoracion,
-      sabor,
-    } = req.body;
+    const { pastel, precio, tamanio_idpast, dec_idpast, cat_idpast } = req.body;
 
     const result = await pool.query(
-      "UPDATE pastel SET precio_pastel = $1, nombre_past = $2, tamanio = $3, descripcion_pastel = $4, decoracion = $5,sabor = $6 WHERE idpastel = $7 RETURNING *",
-      [
-        precio_pastel,
-        nombre_past,
-        tamanio,
-        descripcion_pastel,
-        decoracion,
-        sabor,
-        idpastel,
-      ]
+      "UPDATE pastel SET pastel = $1, precio = $2, tamanio_idpast = $3, dec_idpast = $4, cat_idpast = $5 WHERE idpastel = $6 RETURNING *",
+      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, idpastel]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
@@ -93,7 +71,7 @@ const actualizarpsatel = async (req, res, next) => {
 };
 
 //---------------------- ELIMINAR USUARIO --------------------------
-const eliminarpsatel = async (req, res) => {
+const eliminarpsatel = async (req, res, next) => {
   const { idpastel } = req.params;
   try {
     const result = await pool.query("DELETE FROM pastel WHERE idpastel = $1", [
