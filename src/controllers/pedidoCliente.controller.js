@@ -6,7 +6,7 @@ const getAllpedido = async (req, res, next) => {
     const allpedido = await pool.query(
       `
 
-select pedido.idpedido, pedido.fecha_pedido, cliente.nombre_cl, pastel.pastel,  tamanio_pastel.tamanio, decoracion_pastel.decoracion, pedido.dedicatoria, pedido.cantidad, pedido.total, cliente.direccion_cl, cliente.telefono_cl, pedido.anticipo, pedido. fecha_entrega, estado_pedido.estado 
+select pedido.idpedido, pedido.fecha_pedido, cliente.nombre_cl, pastel.pastel, pastel.precio,  tamanio_pastel.tamanio, decoracion_pastel.decoracion, pedido.dedicatoria, pedido.cantidad, pedido.total, cliente.direccion_cl, cliente.telefono_cl, pedido.anticipo, pedido. fecha_entrega, estado_pedido.estado 
 from pedido
 join cliente on pedido.cliente_idped = cliente.idcliente
 join pastel on pedido.pastel_idped = pastel.idpastel
@@ -26,9 +26,20 @@ ORDER BY idpedido DESC
 const getpedido = async (req, res, next) => {
   try {
     const { idpedido } = req.params;
-    const result = await pool.query("SELECT *FROM pedido WHERE idpedido = $1", [
-      idpedido,
-    ]);
+    const result = await pool.query(
+      `
+
+select pedido.idpedido, pedido.fecha_pedido, cliente.nombre_cl, pastel.pastel, pastel.precio,  tamanio_pastel.tamanio, decoracion_pastel.decoracion, pedido.dedicatoria, pedido.cantidad, pedido.total, cliente.direccion_cl, cliente.telefono_cl, pedido.anticipo, pedido. fecha_entrega, estado_pedido.estado 
+from pedido
+join cliente on pedido.cliente_idped = cliente.idcliente
+join pastel on pedido.pastel_idped = pastel.idpastel
+join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
+join decoracion_pastel on pastel.dec_idpast = decoracion_pastel.idecpast
+join estado_pedido on pedido.estado_idped = estado_pedido.idestadop
+WHERE idpedido = $1
+`,
+      [idpedido]
+    );
     if (result.rows.length === 0)
       return res.status(404).json({
         message: "pedido no encontrado",

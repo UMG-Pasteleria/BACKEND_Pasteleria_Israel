@@ -3,7 +3,7 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS USUARIOS --------------------------------------
 const getAlltipocliente = async (req, res, next) => {
   try {
-    const alltipocliente = await pool.query("SELECT *FROM tipo_cliente");
+    const alltipocliente = await pool.query(`SELECT * FROM tipo_cliente`);
     res.json(alltipocliente.rows);
   } catch (error) {
     next(error);

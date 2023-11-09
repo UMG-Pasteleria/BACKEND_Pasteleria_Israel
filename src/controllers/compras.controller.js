@@ -4,11 +4,13 @@ const pool = require("../db");
 const getallcompras = async (req, res, next) => {
   try {
     const allcompras = await pool.query(
-      `SELECT compra.idcompra, compra.fecha_compra, usuario.nombre_u, proveedor.nombre_proveedor, compra.descripcion, detalle_compra.total  
-FROM compra
-join proveedor on compra.prov_idcomp = proveedor.idprov
-join usuario on compra.user_idcomp = usuario.iduser
-join detalle_compra on compra.detalle_idcomp = detalle_compra.idetallec`
+      `
+  select detalle_compra.idetallec, proveedor.nombre_proveedor,proveedor.nit, producto.producto, detalle_compra.cantidad, detalle_compra.costo_unitario, detalle_compra.total, producto.descripcion, producto.fecha_vencimiento from detalle_compra
+
+join  proveedor on detalle_compra.prov_idetcomp = proveedor.idprov
+join producto on detalle_compra.prod_idetcomp = producto.idprod
+
+`
     );
     res.json(allcompras.rows);
   } catch (error) {

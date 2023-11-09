@@ -4,11 +4,12 @@ const pool = require("../db");
 const getAllpsatel = async (req, res, next) => {
   try {
     const allpsatel =
-      await pool.query(`SELECT pastel.idpastel, pastel.pastel, pastel.precio, tamanio_pastel.tamanio, decoracion_pastel.decoracion, categoria_pastel.categoria
+      await pool.query(`SELECT pastel.idpastel, pastel.pastel, pastel.precio, tamanio_pastel.tamanio, decoracion_pastel.decoracion, categoria_pastel.categoria, pastel.stock
 FROM pastel
+join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
 join decoracion_pastel on pastel.dec_idpast = decoracion_pastel.idecpast
 join categoria_pastel on pastel.cat_idpast = categoria_pastel.idcatp
-join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
+
 ORDER BY idpastel DESC 
 `);
     res.json(allpsatel.rows);
