@@ -3,12 +3,13 @@ const pool = require("../db");
 //------------------------------------ MOSTRAR TODOS LOS USUARIOS --------------------------------------
 const getAllpsatel = async (req, res, next) => {
   try {
-    const allpsatel =
-      await pool.query(`SELECT pastel.idpastel, pastel.pastel, pastel.precio, tamanio_pastel.tamanio, decoracion_pastel.decoracion, categoria_pastel.categoria, pastel.stock
+    const allpsatel = await pool.query(`
+      SELECT pastel.idpastel, pastel.pastel, pastel.precio, tamanio_pastel.tamanio, decoracion_pastel.decoracion, categoria_pastel.categoria,tipo_pastel.tipo_pastel, pastel.stock
 FROM pastel
 join tamanio_pastel on pastel.tamanio_idpast = tamanio_pastel.idtampast
 join decoracion_pastel on pastel.dec_idpast = decoracion_pastel.idecpast
 join categoria_pastel on pastel.cat_idpast = categoria_pastel.idcatp
+join tipo_pastel on pastel.id_tipo = tipo_pastel.idtpastel
 
 ORDER BY idpastel DESC 
 `);
@@ -38,11 +39,12 @@ const getpsatel = async (req, res, next) => {
 const crearpsatel = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { pastel, precio, tamanio_idpast, dec_idpast, cat_idpast } = req.body;
+    const { pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo } =
+      req.body;
     const result = await pool.query(
-      "INSERT INTO pastel (pastel, precio, tamanio_idpast, dec_idpast, cat_idpast) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO pastel (pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast]
+      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo]
     );
 
     res.json(result.rows[0]);
