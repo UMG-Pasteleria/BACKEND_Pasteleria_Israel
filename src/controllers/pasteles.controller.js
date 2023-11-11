@@ -39,12 +39,19 @@ const getpsatel = async (req, res, next) => {
 const crearpsatel = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo } =
-      req.body;
+    const {
+      pastel,
+      precio,
+      tamanio_idpast,
+      dec_idpast,
+      cat_idpast,
+      id_tipo,
+      stock,
+    } = req.body;
     const result = await pool.query(
-      "INSERT INTO pastel (pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      "INSERT INTO pastel (pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo, stock) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo]
+      [pastel, precio, tamanio_idpast, dec_idpast, cat_idpast, id_tipo, stock]
     );
 
     res.json(result.rows[0]);
