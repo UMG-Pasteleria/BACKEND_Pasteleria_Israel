@@ -32,11 +32,11 @@ const getUsuarios = async (req, res, next) => {
 const crearUsuarios = async (req, res, next) => {
   try {
     //console.log(req.body);
-    const { nombre_u, telefono_u, email_u, contrasnia } = req.body;
+    const { nombre_u, telefono_u, email, usuario_password } = req.body;
     const result = await pool.query(
-      "INSERT INTO usuario (nombre_u, telefono_u, email_u, contrasnia) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO usuario (nombre_u, telefono_u, email, usuario_password) VALUES ($1, $2, $3, $4) RETURNING *",
       //INSERT INTO usuario(iduser, nombre, apellido, telefono, email, contrasenia) VALUES (2,'juan', 'Mecanico', 3215792, 'juan@mecanico.com', 'juan123')
-      [nombre_u, telefono_u, email_u, contrasnia]
+      [nombre_u, telefono_u, email, usuario_password]
     );
 
     res.json(result.rows[0]);
@@ -49,11 +49,11 @@ const crearUsuarios = async (req, res, next) => {
 const actualizarUsuarios = async (req, res, next) => {
   const { iduser } = req.params;
   try {
-    const { nombre_u, telefono_u, email_u, contrasenia } = req.body;
+    const { nombre_u, telefono_u, email, usuario_password } = req.body;
 
     const result = await pool.query(
-      "UPDATE usuario SET nombre_u = $1, telefono_u = $2, email_u = $3, contrasenia = $4 WHERE iduser = $5 RETURNING *",
-      [nombre_u, telefono_u, email_u, contrasenia, iduser]
+      "UPDATE usuario SET nombre_u = $1, telefono_u = $2, email= $3,usuario_password = $4 WHERE iduser = $5 RETURNING *",
+      [nombre_u, telefono_u, email, usuario_password, iduser]
     );
     if (result.rows.length === 0)
       return res.status(404).json({
