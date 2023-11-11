@@ -22,7 +22,16 @@ const decoracionPastelRputer = require("./routes/decoracion.routes");
 const tipoPastelRouter = require("./routes/tipoPastel.routes");
 const reportesRouter = require("./routes/reportes.routes");
 
+//const usuariosRouter = require('./routes/usuarios.routes')
+
+
+require("dotenv").config();
+
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+
+//const app = express();
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -41,17 +50,29 @@ app.use(tipoclienteRouter);
 app.use(clientesRouter);
 app.use(comprasRouter);
 app.use(proveedoresRouter);
-app.use(usuariosRouter);
+//app.use(usuariosRouter);
 app.use(pastelRouter);
 app.use(tamanioPastelRouter);
 app.use(decoracionPastelRputer);
 app.use(tipoPastelRouter);
 app.use(reportesRouter);
 
+app.use(usuariosRouter);
+
 app.use((err, req, res, next) => {
   return res.json({
     message: err.message,
   });
 });
-app.listen(process.env.PORT);
-console.log(`Server on port ${process.env.PORT}`);
+// app.listen(process.env.PORT);
+// console.log(`Server on port ${process.env.PORT}`);
+
+
+//ROUTES
+//Register and login routes
+app.use("/auth", require("./routes/jwtAuth"));
+app.use("/home", require("./routes/home"));
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
