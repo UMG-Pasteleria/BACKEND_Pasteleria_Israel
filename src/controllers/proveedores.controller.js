@@ -43,7 +43,8 @@ const crearproveedores = async (req, res, next) => {
 
     res.json(result.rows[0]);
   } catch (error) {
-    next(error);
+    // next(error);
+    console.log(error);
   }
 };
 // `INSERT INTO pedido(fecha_pedido, cantidad, total, cliente_idped, pastel_idped, estado_idped, modopago_idped)
